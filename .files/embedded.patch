@@ -1,0 +1,33 @@
+diff --git a/lib/sw_apps/zynq_fsbl/misc/makefile b/lib/sw_apps/zynq_fsbl/misc/makefile
+index e4a09c109..464d78fe0 100644
+--- a/lib/sw_apps/zynq_fsbl/misc/makefile
++++ b/lib/sw_apps/zynq_fsbl/misc/makefile
+@@ -23,11 +23,11 @@ $(PROCESSOR)/lib/libxil.a: $(PROCESSOR)/lib/libxil_init.a
+ 
+ %/make.include: $(if $(wildcard $(PROCESSOR)/lib/libxil_init.a),$(PROCESSOR)/lib/libxil.a,)
+ 	@echo "Running Make include in $(subst /make.include,,$@)"
+-	$(MAKE) -C $(subst /make.include,,$@) -s include  "SHELL=$(SHELL)" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
++	$(MAKE) -C $(subst /make.include,,$@) -s include  "SHELL=$(SHELL)" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=soft -nostartfiles -g -Wall -Wextra"
+ 
+ %/make.libs: include
+ 	@echo "Running Make libs in $(subst /make.libs,,$@)"
+-	$(MAKE) -C $(subst /make.libs,,$@) -s libs  "SHELL=$(SHELL)" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
++	$(MAKE) -C $(subst /make.libs,,$@) -s libs  "SHELL=$(SHELL)" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=soft -nostartfiles -g -Wall -Wextra"
+ 
+ %/make.clean:
+ 	$(MAKE) -C $(subst /make.clean,,$@) -s clean
+diff --git a/lib/sw_apps/zynq_fsbl/src/Makefile b/lib/sw_apps/zynq_fsbl/src/Makefile
+index 3868c9955..95cfcdcaf 100644
+--- a/lib/sw_apps/zynq_fsbl/src/Makefile
++++ b/lib/sw_apps/zynq_fsbl/src/Makefile
+@@ -62,8 +62,8 @@ AS=arm-none-eabi-gcc
+ CFLAGS=-Wall -O0 -g3 -c -fmessage-length=0
+ LINKER=arm-none-eabi-gcc
+ LDFLAGS = -Wl,--start-group,-lxil,-lgcc,-lc,--end-group -Wl,--start-group,-lxilffs,-lxil,-lgcc,-lc,--end-group -Wl,--start-group,-lrsa,-lxil,-lgcc,-lc,--end-group
+-LD1FLAGS = -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -Wl,-T -Wl,lscript.ld -L$(LIBPATH) -specs=../misc/Xilinx.spec
+-ECFLAGS = -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard
++LD1FLAGS = -mcpu=cortex-a9 -mfloat-abi=softfp -mfpu=neon  -Wl,-build-id=none -Wl,-T -Wl,lscript.ld -L$(LIBPATH) -specs=../misc/Xilinx.spec
++ECFLAGS = -mcpu=cortex-a9 -mfloat-abi=softfp -mfpu=neon
+ endif 
+ ifeq "$(CC)" "armcc"
+ AS=armasm
